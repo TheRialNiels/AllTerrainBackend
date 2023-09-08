@@ -34,6 +34,13 @@ BASED_APPS = [
 ]
 
 LOCAL_APPS = [
+  'apps.authentication',
+  'apps.equipo',
+  'apps.rubrica',
+  'apps.prueba',
+  'apps.universidad',
+  'apps.asesor',
+  'apps.encargado',
 ]
 
 THIRD_PARTY_APPS = [
@@ -169,4 +176,4 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# AUTH_USER_MODEL = "authentication.UserAccount"
+AUTH_USER_MODEL = "authentication.UserAccount"
