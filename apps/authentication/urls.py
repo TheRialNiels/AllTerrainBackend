@@ -1,10 +1,11 @@
 # Django Imports
 from django.urls import path, include
 # Import Views
-from .views import UserAccountLoginView, UserAccountLogoutView, UserAccountChangePasswordView, RecoveryUserPassword, CurrentUser
+from .views import UserAccountCreateView, UserAccountLoginView, UserAccountLogoutView, UserAccountChangePasswordView, RecoveryUserPassword, CurrentUser
 
 
 urlpatterns = [
+  path('create-user/', UserAccountCreateView.as_view(), name='create-user'),
   path('login/', UserAccountLoginView.as_view(), name='login'),
   path('logout/', UserAccountLogoutView.as_view(), name='logout'),
   path('change-password/', UserAccountChangePasswordView.as_view(),

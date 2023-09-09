@@ -25,12 +25,21 @@ class UserAccountCreateView(APIView):
       email = request.data.get('email')
       password = secrets.token_hex(10)
       username = request.data.get('username')
+      first_name = request.data.get('first_name')
+      last_name = request.data.get('last_name')
+      role = request.data.get('role')
+
       user = User.objects.filter(email=email).first()
       if user:
-        return Response({'error': 'User already exists'}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'error': 'El usuario ya existe'}, status=status.HTTP_400_BAD_REQUEST)
       else:
-        user = User.objects.create_user(
-          email=email, password=password, username=username)
+        if role == 'admin':
+          user = User.objects.create_superuser(
+            email=email, password=password, username=username, first_name=first_name, last_name=last_name, role=role)
+        else:
+          user = User.objects.create_user(
+            email=email, password=password, username=username, first_name=first_name, last_name=last_name, role=role)
+
         data = {
           'email': email,
           'password': password,
@@ -51,7 +60,7 @@ class UserAccountLoginView(APIView):
       login(request, user)
       Token.objects.filter(user=user).delete()
       token, _ = Token.objects.get_or_create(user=user)
-      return Response({'token': token.key}, status=status.HTTP_200_OK)
+      return Response({'token': token.key, 'role': user.role}, status=status.HTTP_200_OK)
     elif user and not user.is_active:
       return Response({'error': 'La cuenta está desactivada'}, status=status.HTTP_400_BAD_REQUEST)
     else:

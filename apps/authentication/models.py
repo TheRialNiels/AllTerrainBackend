@@ -34,7 +34,7 @@ class UserAccount(AbstractUser, PermissionsMixin):
   last_name = models.CharField(max_length=255)
   is_active = models.BooleanField(default=True)
   is_staff = models.BooleanField(default=False)
-  role = models.CharField(max_length=9, choices=roleOptions, default='user')
+  role = models.CharField(max_length=9, choices=roleOptions, default='admin')
   codeVerification = models.CharField(max_length=255, null=True, blank=True)
 
   objects = UserAccountManager()
