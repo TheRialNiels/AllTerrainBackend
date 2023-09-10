@@ -125,3 +125,68 @@ class CurrentUser(APIView):
     except Exception as e:
       Errors.objects.create(error=str(e))
       return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class GetUsers(APIView):
+  permission_classes = (IsAuthenticated,)
+
+  def get(self, request):
+    try:
+      users = User.objects.all()
+      serializer = UserAccountSerializer(users, many=True)
+      return Response(serializer.data, status=status.HTTP_200_OK)
+    except Exception as e:
+      Errors.objects.create(error=str(e))
+      return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class UserAccountUpdateView(APIView):
+  permission_classes = (IsAuthenticated,)
+
+  def patch(self, request):
+    try:
+      id = request.data.get('id')
+      email = request.data.get('email')
+      username = request.data.get('username')
+      first_name = request.data.get('first_name')
+      last_name = request.data.get('last_name')
+      role = request.data.get('role')
+      user = User.objects.filter(id=id).first()
+
+      if email:
+        existingEmail = User.objects.filter(email=email).first()
+        if existingEmail and existingEmail.id != user.id:
+          return Response({'error': 'El correo ya existe'}, status=status.HTTP_400_BAD_REQUEST)
+
+      if user:
+        user.email = email
+        user.username = username
+        user.first_name = first_name
+        user.last_name = last_name
+        user.role = role
+        user.save()
+        return Response(status=status.HTTP_200_OK)
+      else:
+        return Response({'error': 'El usuario no existe'}, status=status.HTTP_400_BAD_REQUEST)
+    except Exception as e:
+      return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class UserAccountDeleteView(APIView):
+  permission_classes = (IsAuthenticated,)
+
+  def delete(self, request, *args, **kwargs):
+    try:
+      id = kwargs.get('id')
+      user = User.objects.filter(id=id).first()
+
+      if user.is_staff:
+        return Response({'error': 'No se puede eliminar el usuario'}, status=status.HTTP_400_BAD_REQUEST)
+
+      if user:
+        user.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+      else:
+        return Response({'error': 'El usuario no existe'}, status=status.HTTP_400_BAD_REQUEST)
+    except Exception as e:
+      return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)

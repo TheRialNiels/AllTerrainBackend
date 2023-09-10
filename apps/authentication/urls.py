@@ -1,7 +1,7 @@
 # Django Imports
 from django.urls import path, include
 # Import Views
-from .views import UserAccountCreateView, UserAccountLoginView, UserAccountLogoutView, UserAccountChangePasswordView, RecoveryUserPassword, CurrentUser
+from .views import UserAccountCreateView, UserAccountLoginView, UserAccountLogoutView, UserAccountChangePasswordView, RecoveryUserPassword, CurrentUser, GetUsers, UserAccountDeleteView, UserAccountUpdateView
 
 
 urlpatterns = [
@@ -13,4 +13,7 @@ urlpatterns = [
   path('recovery-password/', RecoveryUserPassword.as_view(),
        name='recovery-password'),
   path('current-user/', CurrentUser.as_view(), name='current-user'),
+  path('get-users/', GetUsers.as_view(), name='get-users'),
+  path('update-user/', UserAccountUpdateView.as_view(), name='update-user'),
+  path('delete-user/<int:id>/', UserAccountDeleteView.as_view(), name='delete-user'),
 ]
