@@ -164,6 +164,10 @@ class UserAccountUpdateView(APIView):
         user.first_name = first_name
         user.last_name = last_name
         user.role = role
+
+        if user.role != 'admin':
+          user.is_staff = False
+
         user.save()
         return Response(status=status.HTTP_200_OK)
       else:
@@ -181,7 +185,7 @@ class UserAccountDeleteView(APIView):
       user = User.objects.filter(id=id).first()
 
       if user.is_staff:
-        return Response({'error': 'No se puede eliminar el usuario'}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'error': 'No se puede eliminar el usuario si es administrador'}, status=status.HTTP_400_BAD_REQUEST)
 
       if user:
         user.delete()
