@@ -1,10 +1,10 @@
 # Importaciones rest_framework
 from rest_framework import serializers
 # Importaciones locales
-from .models import Rubrica
+from .models import Puntaje
 
 
-class RubricaSerializer(serializers.ModelSerializer):
+class PuntajeSerializer(serializers.ModelSerializer):
   class Meta:
-    model = Rubrica
+    model = Puntaje
     fields = '__all__'

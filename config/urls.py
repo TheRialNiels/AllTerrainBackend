@@ -13,11 +13,11 @@ urlpatterns = [
 
   path('api/auth/', include('apps.authentication.urls')),
   path('api/', include('apps.equipo.urls')),
-  path('api/', include('apps.rubrica.urls')),
   path('api/', include('apps.prueba.urls')),
   path('api/', include('apps.universidad.urls')),
   path('api/', include('apps.asesor.urls')),
   path('api/', include('apps.encargado.urls')),
+  path('api/', include('apps.puntaje.urls')),
 
   path('api/docs/', include_docs_urls(title='API')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

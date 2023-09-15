@@ -36,11 +36,11 @@ BASED_APPS = [
 LOCAL_APPS = [
   'apps.authentication',
   'apps.equipo',
-  'apps.rubrica',
   'apps.prueba',
   'apps.universidad',
   'apps.asesor',
   'apps.encargado',
+  'apps.puntaje',
 ]
 
 THIRD_PARTY_APPS = [

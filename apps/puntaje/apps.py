@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class RubricaConfig(AppConfig):
+class PuntajeConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'apps.rubrica'
+    name = 'apps.puntaje'
