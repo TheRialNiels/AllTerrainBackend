@@ -16,6 +16,7 @@ from .models import Errors
 
 User = get_user_model()
 
+
 class UserAccountCreateEncargadoView(viewsets.ModelViewSet):
   serializer_class = UserAccountSerializer
   queryset = User.objects.all()
@@ -23,23 +24,22 @@ class UserAccountCreateEncargadoView(viewsets.ModelViewSet):
   def create(self, request, *args, **kwargs):
     try:
       data = request.data
-      serializer = self.get_serializer(data=data)
-      serializer.is_valid(raise_exception=True)
-      self.perform_create(serializer)
-      headers = self.get_success_headers(serializer.data)
+      email = data.get('email')
+      password = data.get('password')
+      username = data.get('username')
+      first_name = data.get('first_name')
+      last_name = data.get('last_name')
+      role = data.get('role')
 
-      return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-    except Exception as e:
-      Errors.objects.create(error=str(e))
-      return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+      user = User.objects.filter(email=email).first()
+      if user:
+        return Response({'error': 'El usuario ya existe'}, status=status.HTTP_400_BAD_REQUEST)
+      else:
+        user = User.objects.create_user(
+          email=email, password=password, username=username, first_name=first_name, last_name=last_name, role=role)
 
-  def list(self, request, *args, **kwargs):
-    try:
-      queryset = self.filter_queryset(self.get_queryset())
-      serializer = self.get_serializer(queryset, many=True)
-      return Response(serializer.data)
+        return Response(status=status.HTTP_201_CREATED)
     except Exception as e:
-      Errors.objects.create(error=str(e))
       return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
