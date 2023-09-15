@@ -6,7 +6,7 @@ from .views import UserAccountCreateView, UserAccountLoginView, UserAccountLogou
 
 urlpatterns = [
   path('create-user/', UserAccountCreateView.as_view(), name='create-user'),
-  path('create-encargado/', UserAccountCreateEncargadoView.as_view(), name='create-encargado'),
+  path('create-encargado/', UserAccountCreateEncargadoView, name='create-encargado'),
   path('login/', UserAccountLoginView.as_view(), name='login'),
   path('logout/', UserAccountLogoutView.as_view(), name='logout'),
   path('change-password/', UserAccountChangePasswordView.as_view(),
