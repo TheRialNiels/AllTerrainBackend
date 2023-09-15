@@ -44,8 +44,11 @@ class EncargadoByUser(APIView):
   def get(self, request, format=None):
     try:
       encargado = Encargado.objects.filter(user=request.user).first()
-      serializer = EncargadoSerializer(encargado)
-      return Response(serializer.data)
+      if encargado:
+        serializer = EncargadoSerializer(encargado)
+        return Response(serializer.data)
+      else:
+        return Response({'error': 'Favor de agregar tu equipo'}, status=status.HTTP_400_BAD_REQUEST)
     except Exception as e:
       Error.objects.create(error=str(e))
       return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
