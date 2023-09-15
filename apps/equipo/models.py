@@ -7,6 +7,8 @@ class Equipo(models.Model):
   puntaje = models.IntegerField(default=0, blank=True, null=True)
   status = models.BooleanField(default=True)
 
+  objects = models.Manager()
+
   def __str__(self):
     return self.nombreEquipo
 

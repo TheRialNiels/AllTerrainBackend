@@ -10,6 +10,8 @@ class Encargado(models.Model):
   idUsuario = models.ForeignKey(UserAccount, on_delete=models.CASCADE)
   idEquipo = models.ForeignKey(Equipo, on_delete=models.CASCADE)
 
+  objects = models.Manager()
+
   def __str__(self):
     return self.idUsuario.get_full_name()
 
