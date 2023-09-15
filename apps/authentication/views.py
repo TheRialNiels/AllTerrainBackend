@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 # Rest Framework Imports
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status, viewsets
 from rest_framework.authtoken.models import Token
 from rest_framework.permissions import IsAuthenticated
 # Other Imports
@@ -16,34 +16,30 @@ from .models import Errors
 
 User = get_user_model()
 
-class UserAccountCreateEncargadoView(APIView):
-  def post(self, request):
+class UserAccountCreateEncargadoView(viewsets.ModelViewSet):
+  serializer_class = UserAccountSerializer
+  queryset = User.objects.all()
+
+  def create(self, request, *args, **kwargs):
     try:
-      email = request.data.get('email')
-      password = secrets.token_hex(10)
-      username = request.data.get('username')
-      first_name = request.data.get('first_name')
-      last_name = request.data.get('last_name')
-      role = request.data.get('role')
+      data = request.data
+      serializer = self.get_serializer(data=data)
+      serializer.is_valid(raise_exception=True)
+      self.perform_create(serializer)
+      headers = self.get_success_headers(serializer.data)
 
-      user = User.objects.filter(email=email).first()
-      if user:
-        return Response({'error': 'El usuario ya existe'}, status=status.HTTP_400_BAD_REQUEST)
-      else:
-        if role == 'admin':
-          user = User.objects.create_superuser(
-            email=email, password=password, username=username, first_name=first_name, last_name=last_name, role=role)
-        else:
-          user = User.objects.create_user(
-            email=email, password=password, username=username, first_name=first_name, last_name=last_name, role=role)
-
-        data = {
-          'email': email,
-          'password': password,
-        }
-        # validateUser(data)
-        return Response(status=status.HTTP_201_CREATED)
+      return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
     except Exception as e:
+      Errors.objects.create(error=str(e))
+      return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+  def list(self, request, *args, **kwargs):
+    try:
+      queryset = self.filter_queryset(self.get_queryset())
+      serializer = self.get_serializer(queryset, many=True)
+      return Response(serializer.data)
+    except Exception as e:
+      Errors.objects.create(error=str(e))
       return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
