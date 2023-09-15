@@ -8,8 +8,8 @@ from .views import Equipo, EquipoUsuario
 
 router = DefaultRouter()
 router.register('equipo', Equipo, basename='equipo')
-router.register('equipo-usuario', EquipoUsuario, basename='equipo-usuario')
 
 urlpatterns = [
+  path('equipo-usuario/', EquipoUsuario.as_view(), name='equipo-usuario'),
   path('', include(router.urls)),
 ]
