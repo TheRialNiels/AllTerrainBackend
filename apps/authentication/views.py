@@ -16,6 +16,36 @@ from .models import Errors
 
 User = get_user_model()
 
+class UserAccountCreateEncargadoView(APIView):
+  def post(self, request):
+    try:
+      email = request.data.get('email')
+      password = secrets.token_hex(10)
+      username = request.data.get('username')
+      first_name = request.data.get('first_name')
+      last_name = request.data.get('last_name')
+      role = request.data.get('role')
+
+      user = User.objects.filter(email=email).first()
+      if user:
+        return Response({'error': 'El usuario ya existe'}, status=status.HTTP_400_BAD_REQUEST)
+      else:
+        if role == 'admin':
+          user = User.objects.create_superuser(
+            email=email, password=password, username=username, first_name=first_name, last_name=last_name, role=role)
+        else:
+          user = User.objects.create_user(
+            email=email, password=password, username=username, first_name=first_name, last_name=last_name, role=role)
+
+        data = {
+          'email': email,
+          'password': password,
+        }
+        # validateUser(data)
+        return Response(status=status.HTTP_201_CREATED)
+    except Exception as e:
+      return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
 
 class UserAccountCreateView(APIView):
   permission_classes = (IsAuthenticated,)
