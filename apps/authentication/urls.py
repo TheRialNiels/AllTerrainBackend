@@ -6,7 +6,7 @@ from rest_framework.routers import DefaultRouter
 from .views import UserAccountCreateView, UserAccountLoginView, UserAccountLogoutView, UserAccountChangePasswordView, RecoveryUserPassword, CurrentUser, GetUsers, UserAccountDeleteView, UserAccountUpdateView, UserAccountCreateEncargadoView
 
 router = DefaultRouter()
-router.register('create-user', UserAccountCreateEncargadoView, basename='create-user')
+router.register('create-encargado', UserAccountCreateEncargadoView, basename='create-encargado')
 
 urlpatterns = [
   path('create-user/', UserAccountCreateView.as_view(), name='create-user'),
