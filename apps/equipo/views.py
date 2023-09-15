@@ -36,3 +36,18 @@ class Equipo(viewsets.ModelViewSet):
       Error.objects.create(error=str(e))
       return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
+
+class EquipoUsuario(viewsets.ModelViewSet):
+  permission_classes = [IsAuthenticated]
+  serializer_class = EquipoSerializer
+  queryset = Equipo.objects.all()
+
+  def list(self, request, *args, **kwargs):
+    try:
+      queryset = self.filter_queryset(self.get_queryset())
+      queryset = queryset.filter(idUsuario=request.user.id)
+      serializer = self.get_serializer(queryset, many=True)
+      return Response(serializer.data)
+    except Exception as e:
+      Error.objects.create(error=str(e))
+      return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
