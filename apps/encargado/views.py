@@ -10,7 +10,7 @@ from .models import Encargado, Error
 from .serializer import EncargadoSerializer
 
 
-class Encargado(viewsets.ModelViewSet):
+class EncargadoViewset(viewsets.ModelViewSet):
   permission_classes = [IsAuthenticated]
   serializer_class = EncargadoSerializer
   queryset = Encargado.objects.all()
@@ -39,17 +39,16 @@ class Encargado(viewsets.ModelViewSet):
       return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
-class EncargadoByUser(APIView):
+class EncargadoByUser(viewsets.ModelViewSet):
   permission_classes = [IsAuthenticated]
+  serializer_class = EncargadoSerializer
+  queryset = Encargado.objects.all()
 
-  def get(self, request, format=None):
+  def list(self, request, *args, **kwargs):
     try:
-      encargado = Encargado.objects.filter(user=request.user).first()
-      if encargado:
-        serializer = EncargadoSerializer(encargado)
-        return Response(serializer.data)
-      else:
-        return Response({'error': 'Favor de agregar tu equipo'}, status=status.HTTP_400_BAD_REQUEST)
+      queryset = Encargado.objects.filter(idUsuario=request.user.id)
+      serializer = self.get_serializer(queryset, many=True)
+      return Response(serializer.data)
     except Exception as e:
       Error.objects.create(error=str(e))
       return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
