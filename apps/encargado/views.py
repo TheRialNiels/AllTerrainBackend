@@ -18,6 +18,7 @@ class Encargado(viewsets.ModelViewSet):
   def create(self, request, *args, **kwargs):
     try:
       data = request.data
+      data['idUsuario'] = request.user.id
       serializer = self.get_serializer(data=data)
       serializer.is_valid(raise_exception=True)
       self.perform_create(serializer)
