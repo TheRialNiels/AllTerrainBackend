@@ -13,8 +13,9 @@ class Puntaje(models.Model):
   promedioRubricaManiobrabilidad = models.FloatField(blank=True, null=True)
   promedioHillTraction = models.FloatField(blank=True, null=True)
   promedioRubricaResistencia = models.FloatField(blank=True, null=True)
-  mayorTiempoCircuito = models.CharField(max_length=50, blank=True, null=True)
-  mayorTiempoAceleracion = models.CharField(max_length=50, blank=True, null=True)
+
+  menorTiempoCircuito = models.CharField(max_length=50, blank=True, null=True)
+  menorTiempoAceleracion = models.CharField(max_length=50, blank=True, null=True)
 
   def __str__(self):
     return self.idEquipo.nombreEquipo
