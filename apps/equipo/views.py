@@ -1,6 +1,7 @@
 # Importaciones Django
 from django.shortcuts import render
 # Importaciones rest_framework
+from rest_framework.views import APIView
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
@@ -32,6 +33,22 @@ class Equipo(viewsets.ModelViewSet):
       queryset = self.filter_queryset(self.get_queryset())
       serializer = self.get_serializer(queryset, many=True)
       return Response(serializer.data)
+    except Exception as e:
+      Error.objects.create(error=str(e))
+      return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class EquipoByUser(APIView):
+  permission_classes = [IsAuthenticated]
+
+  def get(self, request, format=None):
+    try:
+      equipo = Equipo.objects.filter(user=request.user.id).first()
+      if equipo:
+        serializer = EquipoSerializer(equipo)
+        return Response(serializer.data)
+      else:
+        return Response({'error': 'Favor de agregar tu equipo'}, status=status.HTTP_400_BAD_REQUEST)
     except Exception as e:
       Error.objects.create(error=str(e))
       return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
