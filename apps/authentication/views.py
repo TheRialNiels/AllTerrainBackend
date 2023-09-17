@@ -10,7 +10,7 @@ from rest_framework.permissions import IsAuthenticated
 # Other Imports
 import secrets
 # Local Imports
-from helpers.email import recoveryPassword
+from helpers.email import temporalPassword, recoveryPassword
 from .serializer import UserAccountSerializer
 from .models import Errors
 
@@ -49,7 +49,7 @@ class UserAccountCreateView(APIView):
   def post(self, request):
     try:
       email = request.data.get('email')
-      password = secrets.token_hex(10)
+      password = secrets.token_hex(5)
       username = request.data.get('username')
       first_name = request.data.get('first_name')
       last_name = request.data.get('last_name')
@@ -66,11 +66,12 @@ class UserAccountCreateView(APIView):
           user = User.objects.create_user(
             email=email, password=password, username=username, first_name=first_name, last_name=last_name, role=role)
 
-        data = {
-          'email': email,
-          'password': password,
-        }
-        # validateUser(data)
+        if role == 'admin' or role == 'juez':
+          data = {
+            'email': email,
+            'password': password,
+          }
+          temporalPassword(data)
         return Response(status=status.HTTP_201_CREATED)
     except Exception as e:
       return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
