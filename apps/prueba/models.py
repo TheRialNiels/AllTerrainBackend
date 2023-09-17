@@ -14,19 +14,29 @@ class Prueba(models.Model):
   escrutinioSeguridad = models.BooleanField(
     default=False, blank=True, null=True)
 
-  reporteDiseno = models.FloatField(blank=True, null=True)
-  rubricaPresentaciones = models.FloatField(blank=True, null=True)
-  aceleracionFrenado = models.FloatField(blank=True, null=True)
-  rubricaManiobrabilidad = models.FloatField(blank=True, null=True)
-  hillTraction = models.FloatField(blank=True, null=True)
-  rubricaResistencia = models.FloatField(blank=True, null=True)
+  reporteDiseno = models.FloatField(blank=True, null=True, default="0.0")
+  rubricaPresentaciones = models.FloatField(blank=True, null=True, default="0.0")
+  aceleracionFrenado = models.FloatField(blank=True, null=True, default="0.0")
+  rubricaManiobrabilidad = models.FloatField(blank=True, null=True, default="0.0")
+  hillTraction = models.FloatField(blank=True, null=True, default="0.0")
+  rubricaResistencia = models.FloatField(blank=True, null=True, default="0.0")
 
-  circuitoPrimeraVez = models.CharField(max_length=50, blank=True, null=True)
-  circuitoSegundaVez = models.CharField(max_length=50, blank=True, null=True)
+  circuitoPrimeraVez = models.CharField(max_length=50, blank=True, null=True, default="0.0")
+  circuitoSegundaVez = models.CharField(max_length=50, blank=True, null=True, default="0.0")
   aceleracionPrimeraVez = models.CharField(
-    max_length=50, blank=True, null=True)
+    max_length=50, blank=True, null=True, default="0.0")
   aceleracionSegundaVez = models.CharField(
-    max_length=50, blank=True, null=True)
+    max_length=50, blank=True, null=True, default="0.0")
+
+  reporteDisenoCalificado = models.BooleanField(blank=True, null=True, default=False)
+  rubricaPresentacionesCalificado = models.BooleanField(blank=True, null=True, default=False)
+  aceleracionFrenadoCalificado = models.BooleanField(blank=True, null=True, default=False)
+  rubricaManiobrabilidadCalificado = models.BooleanField(blank=True, null=True, default=False)
+  hillTractionCalificado = models.BooleanField(blank=True, null=True, default=False)
+  rubricaResistenciaCalificado = models.BooleanField(blank=True, null=True, default=False)
+
+  circuitoCalificado = models.BooleanField(blank=True, null=True, default=False)
+  aceleracionCalificado = models.BooleanField(blank=True, null=True, default=False)
 
   def __str__(self):
     return self.idEquipo.nombreEquipo

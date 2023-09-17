@@ -17,6 +17,8 @@ class Puntaje(models.Model):
   menorTiempoCircuito = models.CharField(max_length=50, blank=True, null=True)
   menorTiempoAceleracion = models.CharField(max_length=50, blank=True, null=True)
 
+  totalPuntaje = models.FloatField(blank=True, null=True)
+
   def __str__(self):
     return self.idEquipo.nombreEquipo
 
