@@ -120,12 +120,11 @@ class ActualizarPuntaje(viewsets.ModelViewSet):
           else:
             menorTiempoManiobrabilidad = prueba.maniobrabilidadSegundaVez
 
-      promedioRubricaPresentaciones = ((sumaRubricaPresentaciones / totalPruebas) / 3) if sumaRubricaPresentaciones else 0
+      promedioRubricaPresentaciones = (((sumaRubricaPresentaciones / totalPruebas) / 3) * 2) if sumaRubricaPresentaciones else 0
       promedioAceleracionFrenado = (sumaAceleracionFrenado / totalPruebas) if sumaAceleracionFrenado else 0
       promedioRubricaResistencia = (sumaResistencia / totalPruebas) if sumaResistencia else 0
-      promedioRubricaResistencia = (sumaResistencia / totalPruebas) if sumaResistencia else 0
 
-      totalPuntaje = promedioRubricaPresentaciones + promedioAceleracionFrenado + promedioRubricaResistencia
+      totalPuntaje = promedioRubricaPresentaciones + promedioAceleracionFrenado
 
       # Guardar los promedios en el modelo de Puntaje
       Puntaje.objects.update_or_create(
