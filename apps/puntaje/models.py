@@ -10,12 +10,12 @@ class Puntaje(models.Model):
   promedioReporteDiseno = models.FloatField(blank=True, null=True)
   promedioRubricaPresentaciones = models.FloatField(blank=True, null=True)
   promedioAceleracionFrenado = models.FloatField(blank=True, null=True)
-  promedioRubricaManiobrabilidad = models.FloatField(blank=True, null=True)
-  promedioHillTraction = models.FloatField(blank=True, null=True)
   promedioRubricaResistencia = models.FloatField(blank=True, null=True)
 
   menorTiempoCircuito = models.CharField(max_length=50, blank=True, null=True)
   menorTiempoAceleracion = models.CharField(max_length=50, blank=True, null=True)
+  menorTiempoHillTraction = models.CharField(max_length=50, blank=True, null=True)
+  menorTiempoManiobrabilidad = models.CharField(max_length=50, blank=True, null=True)
 
   totalPuntaje = models.FloatField(blank=True, null=True)
 

@@ -14,11 +14,8 @@ class Prueba(models.Model):
   escrutinioSeguridad = models.BooleanField(
     default=False, blank=True, null=True)
 
-  reporteDiseno = models.FloatField(blank=True, null=True, default="0.0")
   rubricaPresentaciones = models.FloatField(blank=True, null=True, default="0.0")
   aceleracionFrenado = models.FloatField(blank=True, null=True, default="0.0")
-  rubricaManiobrabilidad = models.FloatField(blank=True, null=True, default="0.0")
-  hillTraction = models.FloatField(blank=True, null=True, default="0.0")
   rubricaResistencia = models.FloatField(blank=True, null=True, default="0.0")
 
   circuitoPrimeraVez = models.CharField(max_length=50, blank=True, null=True, default="0.0")
@@ -27,8 +24,11 @@ class Prueba(models.Model):
     max_length=50, blank=True, null=True, default="0.0")
   aceleracionSegundaVez = models.CharField(
     max_length=50, blank=True, null=True, default="0.0")
+  hillTractionPrimeraVez = models.CharField(max_length=50, blank=True, null=True, default="0.0")
+  hillTractionSegundaVez = models.CharField(max_length=50, blank=True, null=True, default="0.0")
+  maniobrabilidadPrimeraVez = models.CharField(max_length=50, blank=True, null=True, default="0.0")
+  maniobrabilidadSegundaVez = models.CharField(max_length=50, blank=True, null=True, default="0.0")
 
-  reporteDisenoCalificado = models.BooleanField(blank=True, null=True, default=False)
   rubricaPresentacionesCalificado = models.BooleanField(blank=True, null=True, default=False)
   aceleracionFrenadoCalificado = models.BooleanField(blank=True, null=True, default=False)
   rubricaManiobrabilidadCalificado = models.BooleanField(blank=True, null=True, default=False)

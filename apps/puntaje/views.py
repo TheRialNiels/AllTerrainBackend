@@ -26,16 +26,10 @@ class ActualizarPuntaje(viewsets.ModelViewSet):
 
       if data['escrutinioSeguridad']:
         defaults['escrutinioSeguridad'] = data['escrutinioSeguridad']
-      if data['reporteDiseno']:
-        defaults['reporteDiseno'] = data['reporteDiseno']
       if data['rubricaPresentaciones']:
         defaults['rubricaPresentaciones'] = data['rubricaPresentaciones']
       if data['aceleracionFrenado']:
         defaults['aceleracionFrenado'] = data['aceleracionFrenado']
-      if data['rubricaManiobrabilidad']:
-        defaults['rubricaManiobrabilidad'] = data['rubricaManiobrabilidad']
-      if data['hillTraction']:
-        defaults['hillTraction'] = data['hillTraction']
       if data['rubricaResistencia']:
         defaults['rubricaResistencia'] = data['rubricaResistencia']
       if data['circuitoPrimeraVez']:
@@ -46,6 +40,14 @@ class ActualizarPuntaje(viewsets.ModelViewSet):
         defaults['aceleracionPrimeraVez'] = data['aceleracionPrimeraVez']
       if data['aceleracionSegundaVez']:
         defaults['aceleracionSegundaVez'] = data['aceleracionSegundaVez']
+      if data['hillTractionPrimeraVez']:
+        defaults['hillTractionPrimeraVez'] = data['hillTractionPrimeraVez']
+      if data['hillTractionSegundaVez']:
+        defaults['hillTractionSegundaVez'] = data['hillTractionSegundaVez']
+      if data['maniobrabilidadPrimeraVez']:
+        defaults['maniobrabilidadPrimeraVez'] = data['maniobrabilidadPrimeraVez']
+      if data['maniobrabilidadSegundaVez']:
+        defaults['maniobrabilidadSegundaVez'] = data['maniobrabilidadSegundaVez']
 
       if data['reporteDisenoCalificado']:
         defaults['reporteDisenoCalificado'] = data['reporteDisenoCalificado']
@@ -74,31 +76,24 @@ class ActualizarPuntaje(viewsets.ModelViewSet):
       pruebas = Prueba.objects.filter(idEquipo=data['idEquipo'])
 
       # Calcular los promedios
-      reporteDiseno = 0
       promedioRubricaPresentaciones = 0
       promedioAceleracionFrenado = 0
-      rubricaManiobrabilidad = 0
-      hillTraction = 0
-      rubricaResistencia = 0
+      promedioRubricaResistencia = 0
 
       totalPruebas = len(pruebas)
 
-      sumaReporteDiseno = 0
       sumaRubricaPresentaciones = 0
       sumaAceleracionFrenado = 0
-      sumaManiobrabilidad = 0
-      sumaHillTraction = 0
       sumaResistencia = 0
 
       menorTiempoCircuito = 0
       menorTiempoAceleracion = 0
+      menorTiempoHillTraction = 0
+      menorTiempoManiobrabilidad = 0
 
       for prueba in pruebas:
-        sumaReporteDiseno += prueba.reporteDiseno if prueba.reporteDiseno else 0
         sumaRubricaPresentaciones += prueba.rubricaPresentaciones if prueba.rubricaPresentaciones else 0
         sumaAceleracionFrenado += prueba.aceleracionFrenado if prueba.aceleracionFrenado else 0
-        sumaManiobrabilidad += prueba.rubricaManiobrabilidad if prueba.rubricaManiobrabilidad else 0
-        sumaHillTraction += prueba.hillTraction if prueba.hillTraction else 0
         sumaResistencia += prueba.rubricaResistencia if prueba.rubricaResistencia else 0
 
         if prueba.circuitoPrimeraVez and prueba.circuitoSegundaVez:
@@ -113,27 +108,36 @@ class ActualizarPuntaje(viewsets.ModelViewSet):
           else:
             menorTiempoAceleracion = prueba.aceleracionSegundaVez
 
-      promedioReporteDiseno = (sumaReporteDiseno / totalPruebas) if sumaReporteDiseno else 0
+        if prueba.hillTractionPrimeraVez and prueba.hillTractionSegundaVez:
+          if float(prueba.hillTractionPrimeraVez) < float(prueba.hillTractionSegundaVez):
+            menorTiempoHillTraction = prueba.hillTractionPrimeraVez
+          else:
+            menorTiempoHillTraction = prueba.hillTractionSegundaVez
+
+        if prueba.maniobrabilidadPrimeraVez and prueba.maniobrabilidadSegundaVez:
+          if float(prueba.maniobrabilidadPrimeraVez) < float(prueba.maniobrabilidadSegundaVez):
+            menorTiempoManiobrabilidad = prueba.maniobrabilidadPrimeraVez
+          else:
+            menorTiempoManiobrabilidad = prueba.maniobrabilidadSegundaVez
+
       promedioRubricaPresentaciones = ((sumaRubricaPresentaciones / totalPruebas) / 3) if sumaRubricaPresentaciones else 0
       promedioAceleracionFrenado = (sumaAceleracionFrenado / totalPruebas) if sumaAceleracionFrenado else 0
-      promedioRubricaManiobrabilidad = (sumaManiobrabilidad / totalPruebas) if sumaManiobrabilidad else 0
-      promedioHillTraction = (sumaHillTraction / totalPruebas) if sumaHillTraction else 0
+      promedioRubricaResistencia = (sumaResistencia / totalPruebas) if sumaResistencia else 0
       promedioRubricaResistencia = (sumaResistencia / totalPruebas) if sumaResistencia else 0
 
-      totalPuntaje = promedioReporteDiseno + promedioRubricaPresentaciones + promedioAceleracionFrenado + promedioRubricaManiobrabilidad + promedioHillTraction + promedioRubricaResistencia
+      totalPuntaje = promedioRubricaPresentaciones + promedioAceleracionFrenado + promedioRubricaResistencia
 
       # Guardar los promedios en el modelo de Puntaje
       Puntaje.objects.update_or_create(
         idEquipo_id=data['idEquipo'],
         defaults={
-          'promedioReporteDiseno': promedioReporteDiseno,
           'promedioRubricaPresentaciones': promedioRubricaPresentaciones,
           'promedioAceleracionFrenado': promedioAceleracionFrenado,
-          'promedioRubricaManiobrabilidad': promedioRubricaManiobrabilidad,
-          'promedioHillTraction': promedioHillTraction,
           'promedioRubricaResistencia': promedioRubricaResistencia,
           'menorTiempoCircuito': menorTiempoCircuito,
           'menorTiempoAceleracion': menorTiempoAceleracion,
+          'menorTiempoHillTraction': menorTiempoHillTraction,
+          'menorTiempoManiobrabilidad': menorTiempoManiobrabilidad,
           'totalPuntaje': totalPuntaje
         }
       )
